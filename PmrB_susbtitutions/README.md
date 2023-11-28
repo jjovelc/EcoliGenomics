@@ -69,18 +69,19 @@ So, to be able to extract the content of each zip file to a directory named acco
 12206971_genome	GCA_022330445.1.zip
 6503681_genome	GCA_011839935.1.zip
 ```
-<br>
 This is done this way:
 <br>
+
 ```bash
 bash 03_extract_zip_file_name.sh
 ```
+
 <br>
 The previous command will automatically call file 'curl_commands.txt' and will parse it to extract the accession number and the zip directory.
 
-4. Now will extract each zip file to a directory named according to the accession number. For example, for pair: 14557891_genome	GCA_026423435.1.zip, the zip file 'GCA_026423435.1.zip' will be extracted to a directory called 14557891_genome (and not more ncbi_dataset).<br>
+1. Now will extract each zip file to a directory named according to the accession number. For example, for pair: 14557891_genome	GCA_026423435.1.zip, the zip file 'GCA_026423435.1.zip' will be extracted to a directory called 14557891_genome (and not more ncbi_dataset).<br>
    
-5. Extraction of zip files is done witht the following command:
+2. Extraction of zip files is done witht the following command:
    
 ```bash
 bash 04_unzip_files.sh
