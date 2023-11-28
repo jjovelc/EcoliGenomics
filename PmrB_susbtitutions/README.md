@@ -32,10 +32,11 @@ When we decompress such a file, it will produce a folder named 'ncbi_dataset' wi
 ```bash
 ls ncbi_dataset/data/
 ```
-
-assembly_data_report.jsonl<br>  dataset_catalog.json
+```
+assembly_data_report.jsonl
+dataset_catalog.json
 GCA_026423435.1
-
+```
 Now we can inspect the directory named with the accession number:
 
 ```bash
@@ -45,10 +46,11 @@ ls ncbi_dataset/data/GCA_026423435.1
 You will have the following content:
 
 ```
-cds_from_genomic.fna<br>			    genomic.gff<br>
-sequence_report.jsonl<br>
-GCA_026423435.1_PDT001501795.1_genomic.fna<br>
-protein.faa<br>
+cds_from_genomic.fna
+genomic.gff
+sequence_report.jsonl
+GCA_026423435.1_PDT001501795.1_genomic.fna
+protein.faa
 ```
 <br>
 Our file of interest is the one with the suffix '_genomic.fna'; this is the one holding the sequences.
@@ -56,16 +58,16 @@ Our file of interest is the one with the suffix '_genomic.fna'; this is the one 
 1. So, to be able to extract the content of each zip file to a directory named accoding to accession numbers, we want to generate a list like this one:
 
 ```
-14557891_genome	GCA_026423435.1.zip<br>
-3389111_genome	GCF_006231045.1.zip<br>
-15566111_genome	GCA_028031265.1.zip<br>
-1080981_genome	GCF_002110545.1.zip<br>
-7898601_genome	GCA_012926405.2.zip<br>
-12376191_genome	GCA_022686715.1.zip<br>
-304981_genome	GCF_000941895.1.zip<br>
-5475331_genome	GCA_009901485.1.zip<br>
-12206971_genome	GCA_022330445.1.zip<br>
-6503681_genome	GCA_011839935.1.zip<br>
+14557891_genome	GCA_026423435.1.zip
+3389111_genome	GCF_006231045.1.zip
+15566111_genome	GCA_028031265.1.zip
+1080981_genome	GCF_002110545.1.zip
+7898601_genome	GCA_012926405.2.zip
+12376191_genome	GCA_022686715.1.zip
+304981_genome	GCF_000941895.1.zip
+5475331_genome	GCA_009901485.1.zip
+12206971_genome	GCA_022330445.1.zip
+6503681_genome	GCA_011839935.1.zip
 ```
 <br>
 This is done this way:
@@ -148,15 +150,15 @@ There are a couple edits to do to create a working list for plotting and other a
 We called that file: Mash_groups_and_substitutions.tsv and it should have the following format:
 ```
 genome  mash_group  genotype
-10002161: B1  Y358N<br>
-10003971: B1  Y358N<br>
-10004151: B1  Y358N<br>
-10004281: B1  Y358N<br>
-10004571: A WT<br>
-10004581: B1  Y358N<br>
-10006361: B1  Y358N<br>
-10009531: D WT<br>
-10009571: A WT<br>
+10002161: B1  Y358N
+10003971: B1  Y358N
+10004151: B1  Y358N
+10004281: B1  Y358N
+10004571: A WT
+10004581: B1  Y358N
+10006361: B1  Y358N
+10009531: D WT
+10009571: A WT
 ``````
 <br>
 
