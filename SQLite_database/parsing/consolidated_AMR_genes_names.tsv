@@ -1,0 +1,294 @@
+colnames_full_dataset_plus	colnames_afp	colnames_res	colnames_rgi	colnames_pf
+				
+23s				23S r.2032C>T
+aac(2')-iia	aac(2')-IIa	aac(2')-IIa	AAC(2')-IIa	
+aac(3)-iid	aac(3)-IId	aac(3)-IId	AAC(3)-IId	
+aac(3)-iv		aac(3)-IV	AAC(3)-IV	
+aac(3)-iva	aac(3)-IVa			
+aac(3)-via	aac(3)-VIa	aac(3)-VIa	AAC(3)-VIa	
+aada			aadA	
+aada1	aadA1	aadA1	ANT(3'')-IIa	
+aada2	aadA2	aadA2	aadA2	
+aada2b		aadA2b		
+aada5	aadA5	aadA5	aadA5	
+aada8	aadA8			
+aada8b		aadA8b	aadA8b	
+acra			Escherichia coli acrA	
+acrab-tolc_acrr_ciprofloxacin_tetracycline_ceftazidime			Escherichia coli AcrAB-TolC with AcrR mutation conferring resistance to ciprofloxacin, tetracycline, and ceftazidime	
+acrab-tolc_marr_ciprofloxacin_tetracycline			Escherichia coli AcrAB-TolC with MarR mutations conferring resistance to ciprofloxacin and tetracycline	
+acrb			acrB	
+acrd			acrD	
+acre			AcrE	
+acrf	acrF		AcrF	
+acrs			AcrS	
+afac	afaC			
+air	air			
+ampc	ampC		Escherichia coli ampC beta-lactamase	
+aph(3')-ia	aph(3')-Ia	aph(3')-Ia	APH(3')-Ia	
+aph(3'')-ib	aph(3'')-Ib	aph(3'')-Ib	APH(3'')-Ib	
+aph(4)-ia	aph(4)-Ia	aph(4)-Ia	APH(4)-Ia	
+aph(6)-id	aph(6)-Id	aph(6)-Id	APH(6)-Id	
+arr-2	arr-2	ARR-2	arr-2	
+arsa	arsA			
+arsd	arsD			
+arsr	arsR			
+asta	astA			
+baca			bacA	
+baer			baeR	
+baes			baeS	
+blacmy-2	blaCMY-2	blaCMY-2	CMY-2	
+blactx-m-14		blaCTX-M-14		
+blactx-m-15	blaCTX-M-15	blaCTX-M-15	CTX-M-15	
+blactx-m-24	blaCTX-M-24	blaCTX-M-24	CTX-M-24	
+blactx-m-55	blaCTX-M-55	blaCTX-M-55	CTX-M-55	
+blactx-m-65	blaCTX-M-65	blaCTX-M-65	CTX-M-65	
+blaec	blaEC			
+blaec-5	blaEC-5		EC-5	
+blalap-2	blaLAP-2	blaLAP-2	LAP-2	
+blaoxa-10	blaOXA-10	blaOXA-10	OXA-10	
+blashv-12		blaSHV-12		
+blashv-2a	blaSHV-2A		SHV-2A	
+blatem	blaTEM			
+blatem-1	blaTEM-1		TEM-1	
+blatem-106		blaTEM-106		
+blatem-126		blaTEM-126		
+blatem-135	blaTEM-135	blaTEM-135	TEM-135	
+blatem-141		blaTEM-141		
+blatem-1a		blaTEM-1A		
+blatem-1b		blaTEM-1B		
+blatem-1c		blaTEM-1C		
+blatem-1d		blaTEM-1D		
+blatem-206		blaTEM-206		
+blatem-209		blaTEM-209		
+blatem-214		blaTEM-214		
+blatem-216		blaTEM-216		
+blatem-220		blaTEM-220		
+bleo	bleO	bleO		
+bmae	bmaE			
+capu	capU			
+cata1	catA1	catA1		
+cati			catI	
+cdtb	cdtB			
+cif	cif			
+cmla1	cmlA1	cmlA1	cmlA1	
+cmla5	cmlA5		cmlA5	
+cmy-132			CMY-132	
+cmy-136			CMY-136	
+cnf1	cnf1			
+cnf2	cnf2			
+cpxa			cpxA	
+crp			CRP	
+cvac	cvaC			
+cyaa	cyaA		Escherichia coli cyaA with mutation conferring resistance to fosfomycin	
+dfra1	dfrA1	dfrA1	dfrA1	
+dfra12	dfrA12	dfrA12	dfrA12	
+dfra14	dfrA14	dfrA14	dfrA14	
+dfra17	dfrA17	dfrA17	dfrA17	
+dfra5	dfrA5	dfrA5	dfrA5	
+dfra8	dfrA8	dfrA8	dfrA8	
+eae	eae			
+ec-13			EC-13	
+ec-14			EC-14	
+ec-15			EC-15	
+ec-18			EC-18	
+ec-19			EC-19	
+ec-8			EC-8	
+efa1	efa1			
+ef-tu_pulvomycin			Escherichia coli EF-Tu mutants conferring resistance to Pulvomycin	
+ehxa	ehxA			
+eila	eilA			
+emra			emrA	
+emrb			emrB	
+emrd	emrD			
+emre	emrE		Escherichia coli emrE	
+emrk			emrK	
+emrr			emrR	
+emry			emrY	
+epta			eptA	
+erm(b)	erm(B)	erm(B)	ErmB	
+espa	espA			
+espb	espB			
+espf	espF			
+espi	espI			
+espj	espJ			
+espk	espK			
+espp	espP			
+espx1	espX1			
+etpd	etpD			
+evga			evgA	
+evgs			evgS	
+f17a	f17a			
+f17g	f17g			
+fdec	fdeC			
+fim41a	fim41a			
+flor	floR	floR	floR	
+focg	focG			
+fosa7	fosA7	fosA7		
+fosa7.5	fosA7.5		FosA7.5	
+gadw			gadW	
+gadx			gadX	
+glpt	glpT			
+glpt_fosfomycin			Escherichia coli GlpT with mutation conferring resistance to fosfomycin	
+gyra			Escherichia coli gyrA conferring resistance to fluoroquinolones	
+gyra_d87g	gyrA_D87G			gyrA p.D87G
+gyra_d87n	gyrA_D87N			gyrA p.D87N
+gyra_d87y	gyrA_D87Y			gyrA p.D87Y
+gyra_s83a	gyrA_S83A			gyrA p.S83A
+gyra_s83l	gyrA_S83L			gyrA p.S83L
+gyra_triclosan			Escherichia coli gyrA with mutation conferring resistance to triclosan	
+gyrb_fluoroquinolones			Morganella morganii gyrB conferring resistance to fluoroquinolones	
+hded-gi	hdeD-GI			
+hlya-alpha	hlyA-alpha			
+h-ns			H-NS	
+hsp20	hsp20			
+ibea	ibeA			
+iha	iha			
+irea	ireA			
+irob	iroB			
+iroc	iroC			
+irod	iroD			
+iroe	iroE			
+iron	iroN			
+iss	iss			
+iuca	iucA			
+iucb	iucB			
+iucc	iucC			
+iucd	iucD			
+iuta	iutA			
+katp	katP			
+kdpe			kdpE	
+kefb-gi	kefB-GI			
+kpne			Klebsiella pneumoniae KpnE	
+kpnf			Klebsiella pneumoniae KpnF	
+kpnh			Klebsiella pneumoniae KpnH	
+lpfa	lpfA			
+lpfa1	lpfA1			
+lpfa2	lpfA2			
+mara			marA	
+marr	marR			
+mchb	mchB			
+mchf	mchF			
+mdfa			Escherichia coli mdfA	
+mdta			mdtA	
+mdtb			mdtB	
+mdtc			mdtC	
+mdte			mdtE	
+mdtf			mdtF	
+mdtg			mdtG	
+mdth			mdtH	
+mdtm	mdtM		mdtM	
+mdtn			mdtN	
+mdto			mdtO	
+mdtp			mdtP	
+mef(b)	mef(B)	mef(B)	mef(B)	
+mera	merA			
+merb	merB			
+merc	merC			
+merd	merD			
+mere	merE			
+merf	merF			
+merp	merP			
+merr	merR			
+mert	merT			
+mph(a)	mph(A)	mph(A)	mphA	
+msba			msbA	
+ncra	ncrA			
+ncrb	ncrB			
+ncrc	ncrC			
+ncry	ncrY			
+nfae	nfaE			
+nfsa	nfsA			
+nlea	nleA			
+nleb	nleB			
+nleb2	nleB2			
+nlec	nleC			
+oqxa	oqxA	OqxA	oqxA	
+oqxb	oqxB	OqxB	oqxB	
+papa	papA			
+papc	papC			
+pape	papE			
+papf	papF			
+papg-ii	papG-II			
+paph	papH			
+parc_a56T	parC_A56T		Escherichia coli parC conferring resistance to fluoroquinolones	parC p.A56T
+parc_s57t	parC_S57T		Escherichia coli parC conferring resistance to fluoroquinolones	parC p.S57T
+parc_s80i	parC_S80I		Escherichia coli parC conferring resistance to fluoroquinolones	parC p.S80I
+pare_d475e	parE_D475E			
+pare_i355t	parE_I355T			parE p.I355T
+pare_i529l	parE_I529L			parE p.I529L
+pare_l416f	parE_L416F			parE p.L416F
+pare_s458t				parE p.S458T
+pbp3_beta-lactams			Haemophilus influenzae PBP3 conferring resistance to beta-lactam antibiotics	
+pcoa	pcoA			
+pcob	pcoB			
+pcoc	pcoC			
+pcod	pcoD			
+pcoe	pcoE			
+pcor	pcoR			
+pcos	pcoS			
+pic	pic			
+pmrb_e123d	pmrB_E123D			
+pmrb_y358n	pmrB_Y358N			
+pmrf			PmrF	
+psi-gi	psi-GI			
+ptsi	ptsI		Escherichia coli PtsI with mutation conferring resistance to fosfomycin	
+qacedelta1	qacEdelta1		qacEdelta1	
+qacg			qacG	
+qacg2	qacG2			
+qacj			qacJ	
+qacl	qacL		qacL	
+qnrs1	qnrS1	qnrS1	QnrS1	
+qnrs13	qnrS13	qnrS13		
+rsma			rsmA	
+sat	sat			
+sat2	sat2		SAT-2	
+senb	senB			
+sfaf	sfaF			
+sfas	sfaS			
+shsp	shsP			
+siga	sigA			
+sila	silA			
+silb	silB			
+silc	silC			
+sile	silE			
+silf	silF			
+silp	silP			
+silr	silR			
+sils	silS			
+soxr			Escherichia coli soxR with mutation conferring antibiotic resistance	
+soxs			Escherichia coli soxS with mutation conferring antibiotic resistance	
+ssle	sslE			
+sta1	sta1			
+stxa2d	stxA2d			
+stxb2d	stxB2d			
+suba	subA			
+subb	subB			
+sul1	sul1	sul1	sul1	
+sul2	sul2	sul2	sul2	
+sul3	sul3	sul3	sul3	
+tccp	tccP			
+terb	terB			
+terc	terC			
+terd	terD			
+tere	terE			
+terw	terW			
+terz	terZ			
+tet(a)	tet(A)	tet(A)	tet(A)	
+tet(b)	tet(B)	tet(B)	tet(B)	
+tet(c)	tet(C)	tet(C)	tet(C)	
+tet(m)	tet(M)	tet(M)	tet(M)	
+tetr			tetR	
+tir	tir			
+tolc			TolC	
+trxlhr	trxLHR			
+tsh	tsh			
+ugd			ugd	
+uhpt	uhpT		Escherichia coli UhpT with mutation conferring resistance to fosfomycin	
+vactox	vactox			
+vang			vanG	
+ybtp	ybtP			
+ybtq	ybtQ			
+yfdx1	yfdX1			
+yfdx2	yfdX2			
+ymgb	ymgB			
+yoji			YojI	
