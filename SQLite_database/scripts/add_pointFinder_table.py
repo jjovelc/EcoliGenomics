@@ -84,11 +84,11 @@ create_pointFinder_table(conn)
 conn.close()
 
 # Directory containing result files
-directory = "/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/resfinder"
+directory = "/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/hybrid_data/resfinder"
 
 # Parse and insert data for all pointFinder result files
 for filename in os.listdir(directory):
-    if filename.endswith("_pointFinder.txt"):
+    if filename.endswith("_PointFinder.txt"):
         filepath = os.path.join(directory, filename)
         print(f"Processing file: {filepath}")
         pointFinder_data = parse_pointFinder_file(filepath)

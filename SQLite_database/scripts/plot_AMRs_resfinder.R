@@ -7,11 +7,11 @@ library(patchwork)
 library(ggnewscale)
 
 # Set working directory
-setwd('/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database')
+setwd('/Users/juanjovel/OneDrive/jj/UofC/git_repos/EcoliGenomics/SQLite_database/scripts')
 
 # Read the TSV file
 #data <- read.table("resFinder_results_report.tsv", row.names = 1, header = TRUE, sep = '\t')
-data <- read.table("amrp_results_report-core.tsv", row.names = 1, header = TRUE, sep = '\t')
+data <- read.table("plasmFinder_results_report.tsv", row.names = 1, header = TRUE, sep = '\t')
 
 #plot_outfile <- "resFinder_results_report_plot.png"
 plot_outfile <- "amr-core_results_report_plot.png"

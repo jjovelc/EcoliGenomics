@@ -45,8 +45,8 @@ def parse_intFinder_file(filepath):
         return []
 
     filename = os.path.basename(filepath)
-    sample_id = re.sub("_integrons.tsv", "", filename)
-    sample_id = re.sub(r"-[ACGT].*$", "", sample_id)
+    sample_id = re.sub("_final.integrons", "", filename)
+    
 
     # Check if the second line matches "# No Integron found"
     intFinder_data = []
@@ -99,11 +99,11 @@ create_intFinder_table(conn)
 conn.close()
 
 # Directory containing CSV files
-directory = "/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/integronFinder_reports"
+directory = "/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/hybrid_data/integron_finder"
 
 # Parse and insert data for all integronFinder result files
 for filename in os.listdir(directory):
-    if filename.endswith(".tsv"):
+    if filename.endswith(".integrons"):
         filepath = os.path.join(directory, filename)
         print(f"Processing file: {filepath}")
         intFinder_data = parse_intFinder_file(filepath)

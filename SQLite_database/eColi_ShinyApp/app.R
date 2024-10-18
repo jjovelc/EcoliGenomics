@@ -7,8 +7,7 @@ source("global.R")
 source("modules/ui/tables_ui.R")
 source("modules/ui/plots_ui.R")
 source("modules/ui/analysis_ui.R")
-source("modules/ui/home_ui.R")
-
+source("modules/ui/home_ui.R") 
 
 # Source main UI and server
 source("ui.R")

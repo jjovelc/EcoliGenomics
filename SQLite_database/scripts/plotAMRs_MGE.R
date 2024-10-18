@@ -1,54 +1,34 @@
 library(RColorBrewer)
-library(ggplot2)
+library(plotly)
 library(reshape2)
 library(dplyr)
 library(tibble)
-library(patchwork)
-library(ggnewscale)
 
 # Set working directory
-setwd('/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database')
+setwd('/Users/juanjovel/OneDrive/jj/UofC/git_repos/EcoliGenomics/SQLite_database/scripts')
 
 # Read the TSV file
-data <- read.table("mge_results_report.tsv", row.names = 1, header = TRUE, sep = '\t')
-plot_outfile <- "mge_combined_plot.png"
+data <- read.table("mge_results_report.tsv", row.names = 1, header = TRUE, sep = '	')
+plot_outfile <- "mge_combined_plot.html"
 
 # Read metadata
-metadata <- read.table("metadata.tsv", row.names = 1, header = TRUE, sep = '\t')
+metadata <- read.table("metadata.tsv", header = TRUE, sep = '	')
 
-# Filter out the specific columns
-is_not_Box1_Vial_58_53412 <- colnames(data) != "Box1_Vial_58_53412"
-#data_filtered <- data[, is_not_Box1_Vial_58_53412]
-
-# Make metadata and amrs tables IDs the same
-metadata$isolate <- gsub("-", "_", metadata$isolate)
-data_filtered <- data[, metadata$isolate]
-#colnames(data_filtered) <- metadata$isolate
-
-# Check if all isolates in data_filtered have corresponding metadata
-isolates_not_in_metadata <- setdiff(colnames(data_filtered), metadata$isolate)
-if (length(isolates_not_in_metadata) > 0) {
-  stop("The following isolates in data_filtered do not have corresponding metadata: ", paste(isolates_not_in_metadata, collapse = ", "))
-}
+# Ensure 'sample_id' column is in the correct format
+metadata$sample_id <- gsub('-', '.', metadata$sample_id)
 
 # Transpose the data
-data_t <- t(data_filtered)
+data_t <- t(data)
 
-# Melt the data for ggplot
+# Melt the data for plotly
 melted_data <- melt(as.matrix(data_t))
 colnames(melted_data) <- c('Sample', 'AMR', 'Count')
 
-# Check for any discrepancies between Sample and isolate
-samples_not_in_metadata <- setdiff(melted_data$Sample, metadata$isolate)
-if (length(samples_not_in_metadata) > 0) {
-  warning("The following samples in melted_data do not have corresponding metadata: ", paste(samples_not_in_metadata, collapse = ", "))
-}
-
-# Merge metadata with melted data using 'isolate'
-melted_data <- merge(melted_data, metadata, by.x = "Sample", by.y = "isolate", all.x = TRUE)
+# Merge metadata with melted data using 'sample_id'
+melted_data <- merge(melted_data, metadata, by.x = "Sample", by.y = "sample_id", all.x = TRUE)
 
 # Check the merged data
-head(melted_data)
+head(melted_data, n=100)
 
 # Sort the samples by 'source'
 melted_data <- melted_data %>% arrange(source, Sample)
@@ -64,56 +44,71 @@ source_colors <- setNames(brewer.pal(length(unique_sources), "Dark2"), unique_so
 unique_mash_groups <- unique(melted_data$mash_group)
 mash_group_colors <- setNames(brewer.pal(length(unique_mash_groups), "Set3"), unique_mash_groups)
 
-# Create a color palette for 'Count' using RColorBrewer's 'Paired' palette
-# Set zero to white and other counts to Paired palette colors
-count_colors <- c("0" = "white", setNames(brewer.pal(8, "Set1"), as.character(1:8)))
-
 # Create the histogram for AMR abundance per sample
 abundance_data <- melted_data %>% group_by(Sample) %>% summarise(Abundance = sum(Count))
 abundance_data$Sample <- factor(abundance_data$Sample, levels = levels(melted_data$Sample))
-histogram <- ggplot(abundance_data, aes(x = Sample, y = Abundance)) +
-  geom_bar(stat = "identity", fill = "dodgerblue4") +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_blank(),  # Remove x-axis text for the histogram
-    axis.ticks.x = element_blank(),  # Remove x-axis ticks for the histogram
-    axis.text.y = element_text(size = 24)
-  ) + 
-  labs(x = NULL, y = "", title = "")
+histogram <- plot_ly(abundance_data, x = ~Sample, y = ~Abundance, type = 'bar', marker = list(color = 'dodgerblue4')) %>%
+  layout(
+    xaxis = list(title = ''),
+    yaxis = list(title = 'Abundance'),
+    barmode = 'stack',
+    margin = list(b = 150),
+    title = 'AMR Abundance per Sample'
+  )
 
-# Create the heatmap with a solid color for counts and add a gray grid
-heatmap <- ggplot() +
-  geom_tile(data = melted_data, aes(x = Sample, y = AMR, fill = as.factor(Count)), color = "gray") +
-  scale_fill_manual(values = count_colors, name = "Count") +
-  new_scale_fill() +
-  
-  geom_tile(data = unique(melted_data[, c("Sample", "mash_group")]), 
-            aes(x = Sample, y = -1, fill = mash_group), height = 5) +
-  scale_fill_manual(values = mash_group_colors, name = "Mash group", guide = guide_legend(order = 2)) +
-  new_scale_fill() +
-  
-  geom_tile(data = unique(melted_data[, c("Sample", "source")]), 
-            aes(x = Sample, y = -7, fill = source), height = 5) +
-  scale_fill_manual(values = source_colors, name = "Source", guide = guide_legend(order = 1)) +
-  
-  theme_minimal() +
-  theme(
-    axis.text.x = element_blank(),  # Remove x-axis text
-    axis.ticks.x = element_blank(),  # Remove x-axis ticks
-    axis.text.y = element_text(size = 6),
-    plot.margin = margin(10, 10, 10, 10),
-    legend.position = "right",
-    axis.title.y = element_text(size = 32),
-    legend.text = element_text(size = 32),  # Increase legend text size
-    legend.title = element_text(size = 32)  # Increase legend title size
-  ) +
-  labs(x = NULL, y = "Mobile genetic elements", title = "")
+# Create the heatmap for AMR counts
+heatmap <- plot_ly(
+  data = melted_data, 
+  x = ~Sample, 
+  y = ~AMR, 
+  z = ~Count, 
+  type = 'heatmap', 
+  colors = c("white", RColorBrewer::brewer.pal(8, "Set1")),
+  showscale = TRUE
+) %>%
+  layout(
+    xaxis = list(title = 'Sample', tickangle = 45),
+    yaxis = list(title = 'Mobile Genetic Elements'),
+    margin = list(b = 150),
+    title = 'AMR Heatmap'
+  )
 
-# Combine the histogram and heatmap using patchwork
-combined_plot <- histogram / heatmap + plot_layout(heights = c(2, 10))
+# Create bottom bars for 'mash_group' and 'source'
+mash_group_bar <- plot_ly(
+  data = melted_data, 
+  x = ~Sample, 
+  y = ~mash_group, 
+  type = 'heatmap', 
+  colors = mash_group_colors,
+  showscale = FALSE
+) %>%
+  layout(
+    xaxis = list(title = ''),
+    yaxis = list(title = 'Mash Group', showticklabels = FALSE),
+    margin = list(b = 150),
+    height = 100
+  )
+
+source_bar <- plot_ly(
+  data = melted_data, 
+  x = ~Sample, 
+  y = ~source, 
+  type = 'heatmap', 
+  colors = source_colors,
+  showscale = FALSE
+) %>%
+  layout(
+    xaxis = list(title = 'Sample', tickangle = 45),
+    yaxis = list(title = 'Source', showticklabels = FALSE),
+    margin = list(b = 150),
+    height = 100
+  )
+
+# Combine the plots into one using subplot from plotly
+combined_plot <- subplot(histogram, heatmap, mash_group_bar, source_bar, nrows = 4, shareX = TRUE, titleY = TRUE)
 
 # Display the combined plot
-print(combined_plot)
+combined_plot
 
 # Optionally, save the plot
-ggsave(plot_outfile, combined_plot, width = 30, height = 20, dpi = 300)
+htmlwidgets::saveWidget(combined_plot, file = plot_outfile)

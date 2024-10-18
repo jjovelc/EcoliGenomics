@@ -1,0 +1,5 @@
+Metadata-Version: 2.1
+Name: parse_SQLite
+Version: 0.1
+Summary: Series of funcitons to parse the Ecoli.db SQLite db
+Author: Juan Jovel

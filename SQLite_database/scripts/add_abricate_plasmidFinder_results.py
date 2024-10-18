@@ -39,7 +39,6 @@ def parse_plasmFinder_file(filepath):
     df = pd.read_csv(filepath, sep="\t")
     filename = os.path.basename(filepath)
     sample_id = re.sub("_plasmidfinder.tab", "", filename)
-    sample_id = re.sub(r"-[ACGT].*$", "", sample_id)
 
     plasmFinder_data = []
     for index, row in df.iterrows():
@@ -87,7 +86,7 @@ create_plasmFinder_table(conn)
 conn.close()
 
 # Directory containing CSV files
-directory = "/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/abricate/FINAL_DATASET/plasmidfinder"
+directory = "/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/hybrid_data/plasmidfinder"
 
 # Parse and insert data for all plasmidFinder result files
 for filename in os.listdir(directory):

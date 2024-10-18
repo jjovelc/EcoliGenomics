@@ -29,7 +29,7 @@ def create_resFinder_table(conn):
 def parse_resFinder_file(filepath):
 
     filename = os.path.basename(filepath)
-    sample_id = re.sub("_ResFinder.txt", "", filename)
+    sample_id = re.sub("_ResFinder_results_tab.txt", "", filename)
     resFinder_data = []
     
     try:
@@ -38,9 +38,14 @@ def parse_resFinder_file(filepath):
             print(f"File {filepath} is empty. Adding empty sample record.")            
             return [(sample_id, "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA")]
 
-        df = pd.read_csv(filepath, sep="\t", comment="#")
+        # Ensure the file is read as tab-separated
+        df = pd.read_csv(filepath, sep="\t", comment="#", engine='python')
         print(f"Parsed DataFrame for file {filepath}:")
         print(df.head())  # Print the first few rows of the DataFrame
+        
+        # Check if the column names are as expected
+        print("Columns in file:", df.columns)
+
     except pd.errors.EmptyDataError:
         print(f"No columns to parse from file {filepath}. Adding empty sample record.")
         return [(sample_id, "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA")]
@@ -50,7 +55,7 @@ def parse_resFinder_file(filepath):
         try:
             resFinder_record = (
                 sample_id,
-                row.get("Resistance gene", "NA"),
+                row.get("Resistance gene", "NA").strip(),
                 row.get("Identity", "NA"),
                 row.get("Alignment Length/Gene Length", "NA"),
                 row.get("Coverage", "NA"),
@@ -60,9 +65,10 @@ def parse_resFinder_file(filepath):
                 row.get("Phenotype", "NA"),
                 row.get("Accession no.", "NA"),
             )
+            print(f"Adding record: {resFinder_record}")  # Debugging: Show the record being added
             resFinder_data.append(resFinder_record)
         except ValueError as e:
-            print(f"Error parsing line: {index} - {e}")
+            print(f"Error parsing line {index}: {e}")
 
     if not resFinder_data:  # If no records were added, add an empty sample record
         resFinder_data.append(
@@ -92,13 +98,16 @@ create_resFinder_table(conn)
 conn.close()
 
 # Directory containing result files
-directory = "/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/resfinder"
+directory = "/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/hybrid_data/resfinder"
 
 # Parse and insert data for all resFinder result files
 for filename in os.listdir(directory):
-    if filename.endswith("_ResFinder.txt"):
+    if filename.endswith("_ResFinder_results_tab.txt"):
         filepath = os.path.join(directory, filename)
         print(f"Processing file: {filepath}")
         resFinder_data = parse_resFinder_file(filepath)
-        insert_resFinder_data("Ecoli.db", resFinder_data)
-        print(f"Inserted data into Ecoli.db from file: {filename}")
+        if resFinder_data:
+            insert_resFinder_data("Ecoli.db", resFinder_data)
+            print(f"Inserted data into Ecoli.db from file: {filename}")
+        else:
+            print(f"No data to insert for file: {filename}")

@@ -38,11 +38,9 @@ def create_amrp_table(conn):
 
 def parse_amrp_file(filepath):
     df = pd.read_csv(filepath, sep='\t')
-
     filename = os.path.basename(filepath)
-    sample_id = re.sub("_amrFinderPlus.tsv", "", filename)
-    sample_id = re.sub(r'-[ACGT].*$', '', sample_id)
-
+    sample_id = filename
+    
     amr_data = []
     for index, row in df.iterrows():
         try:
@@ -94,11 +92,11 @@ create_amrp_table(conn)
 conn.close()
 
 # Directory containing TSV files
-directory = '/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/amrfinderplus/FINAL_DATASET'
+directory = '/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/hybrid_data/amrfinderplus'
 
 # Parse and insert data for all amrp result files
 for filename in os.listdir(directory):
-    if filename.endswith('.tsv'):
+    if filename.startswith('EC-'):
         filepath = os.path.join(directory, filename)
         print(f"Processing file: {filepath}")
         amr_data = parse_amrp_file(filepath)
