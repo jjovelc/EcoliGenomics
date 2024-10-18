@@ -20,7 +20,7 @@ tables_ui <- function(id) {
         downloadButton(ns("download_csv"), "Download CSV")
       ),
       mainPanel(
-        DTOutput(ns("table_view")) # Display the table results
+        DTOutput(ns("table_view")) 
       )
     )
   )

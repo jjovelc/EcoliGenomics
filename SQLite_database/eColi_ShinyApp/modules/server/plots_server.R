@@ -96,6 +96,11 @@ plots_server <- function(input, output, session) {
       return(NULL)
     }
     
+    melted_data <- melted_data %>%
+      arrange(source, Sample)  # First by 'source', then by 'Sample' within each 'source'
+    
+    
+    
     # Ensure the Sample factor levels are in the sorted order
     melted_data$Sample <- factor(melted_data$Sample, levels = unique(melted_data$Sample))
     
@@ -117,7 +122,7 @@ plots_server <- function(input, output, session) {
     heatmap <- ggplot(melted_data, aes(x = Sample, y = AMR, fill = as.factor(Count))) +
       geom_tile(color = "gray") +
       scale_fill_manual(
-        values = c("0" = "white", "1" = "dodgerblue1", "2" = "red", "3" = "limegreen", "4" = "black"),
+        values = c("0" = "white", "1" = "blue", "2" = "red", "3" = "limegreen", "4" = "black"),
         name = "Count"
       ) +
       theme_bw() +
@@ -130,22 +135,55 @@ plots_server <- function(input, output, session) {
         legend.position = "right",
         legend.text = element_text(size = 14),  # Doubled legend font size
         legend.title = element_text(size = 16),  # Doubled legend title font size
-        plot.margin = margin(10, 10, 10, 10)
+        plot.margin = margin(5, 5, 10, 10)
       ) +
       labs(x = NULL, y = "Resistance Genes")
     
+    
+    abundance_data <- melted_data %>% 
+      group_by(Sample) %>% 
+      summarise(Abundance = sum(Count))
+    
+    abundance_data$Sample <- factor(abundance_data$Sample, levels = levels(melted_data$Sample))
+    
+    histogram <- ggplot(abundance_data, aes(x = Sample, y = Abundance)) +
+      geom_bar(stat = "identity", fill = "turquoise3") +
+      theme_bw() +
+      theme(
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.y = element_text(size = 10),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 12),
+        plot.margin = margin(10, 10, 10, 10)
+      ) +
+      labs(y = "Abundance")
+    
+    
+    
     # Add Mash group and Source color bars
+    # Add Mash group and Source color bars with controlled font sizes
     mash_group_bar <- ggplot(unique(melted_data[, c("Sample", "mash_group")]), aes(x = Sample, y = 1, fill = mash_group)) +
-      geom_tile(height = 0.3) +
+      geom_tile(height = 0.1) +
       scale_fill_manual(values = mash_group_colors, name = "Mash Group") +
       theme_void() +
-      theme(legend.position = "bottom")
+      theme(
+        legend.position = "bottom",
+        legend.title = element_text(size = 14, face = "bold"),   # Adjust legend title size and style
+        legend.text = element_text(size = 12)                   # Adjust legend text size
+      )
     
     source_bar <- ggplot(unique(melted_data[, c("Sample", "source")]), aes(x = Sample, y = 1, fill = source)) +
-      geom_tile(height = 0.3) +
+      geom_tile(height = 0.1) +
       scale_fill_manual(values = source_colors, name = "Source") +
       theme_void() +
-      theme(legend.position = "bottom")
+      theme(
+        legend.position = "bottom",
+        legend.title = element_text(size = 14, face = "bold"),   # Adjust legend title size and style
+        legend.text = element_text(size = 12)                   # Adjust legend text size
+      )
+    
+    
     
     # Determine heights based on context (display vs download)
     if (for_download) {
@@ -155,10 +193,10 @@ plots_server <- function(input, output, session) {
     }
     
     # Combine the heatmap and color bars using patchwork
-    combined_plot <- (mash_group_bar / source_bar / heatmap) +
-      plot_layout(heights = c(0.5, 0.5, heatmap_height), guides = "collect") &  # Adjusted heatmap height
+    combined_plot <- (histogram / heatmap / mash_group_bar / source_bar) +
+      plot_layout(heights = c(5, heatmap_height, 2, 2), guides = "collect") &  # Adjusted heatmap height
       theme(
-        plot.margin = margin(t = 10, b = 10, l = 10, r = 10),
+        plot.margin = margin(t = 1, b = 1, l = 10, r = 10),
         legend.position = "bottom"
       )
     
@@ -193,3 +231,4 @@ plots_server <- function(input, output, session) {
     }
   )
 }
+
