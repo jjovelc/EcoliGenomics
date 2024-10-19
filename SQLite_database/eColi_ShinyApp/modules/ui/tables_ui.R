@@ -12,11 +12,11 @@ tables_ui <- function(id) {
     titlePanel("SQLite Database Viewer"),
     sidebarLayout(
       sidebarPanel(
-        selectInput(ns("table"), "Choose a table:", choices = NULL),          # Table selection
-        textInput(ns("sample_id"), "Enter Sample ID (optional):"),            # Sample ID filter
-        textInput(ns("gene_symbol"), "Enter Gene Symbol (optional):"),        # Gene symbol filter
+        selectInput(ns("table"), "Choose a table:", choices = NULL),         # Table selection
+        uiOutput(ns("column_selector")),                                     # Dynamic column selection
+        textInput(ns("search_value"), "Enter Search Value (optional):"),     # Search value input
         textAreaInput(ns("custom_query"), "Enter Custom SQL Query (optional):", "", rows = 4), # Custom SQL query input
-        actionButton(ns("query"), "Query Database"),                          # Query button
+        actionButton(ns("query"), "Query Database"),                         # Query button
         downloadButton(ns("download_csv"), "Download CSV")
       ),
       mainPanel(

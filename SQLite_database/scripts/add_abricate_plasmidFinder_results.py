@@ -10,7 +10,7 @@ def create_plasmFinder_table(conn):
     c = conn.cursor()
     c.execute(
         """
-        CREATE TABLE IF NOT EXISTS plasmFinder_results (
+        CREATE TABLE IF NOT EXISTS abricate_plasmidfinder_results (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             sample_id TEXT,
             contig TEXT,
@@ -71,7 +71,7 @@ def insert_plasmFinder_data(db_name, plasmFinder_data):
     c = conn.cursor()
 
     sql_insert = """
-        INSERT OR IGNORE INTO plasmFinder_results (sample_id, contig, start, end, strand, gene, coverage, coverage_map, gaps, percent_coverage, percent_identity, database, accession, product, resistance) 
+        INSERT OR IGNORE INTO abricate_plasmidfinder_results (sample_id, contig, start, end, strand, gene, coverage, coverage_map, gaps, percent_coverage, percent_identity, database, accession, product, resistance) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """
 
@@ -86,7 +86,7 @@ create_plasmFinder_table(conn)
 conn.close()
 
 # Directory containing CSV files
-directory = "/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/hybrid_data/plasmidfinder"
+directory = "/Users/juanjovel/OneDrive/jj/UofC/data_analysis/sylviaCheckley/alyssaButters/eColi_genomics/SQLite_database/hybrid_data/abricate_plasmidfinder"
 
 # Parse and insert data for all plasmidFinder result files
 for filename in os.listdir(directory):

@@ -1,10 +1,22 @@
 # tables_server.R
 
+source("global.R")
+
 tables_server <- function(input, output, session, con, tables) {
+  ns <- session$ns  # Namespacing for module inputs and outputs
   
-  # Update the choices for the selectInput
+  # Update the choices for the table selectInput
   observe({
     updateSelectInput(session, "table", choices = tables)
+  })
+  
+  # Dynamic UI for column selection based on selected table
+  output$column_selector <- renderUI({
+    req(input$table)
+    # Get the column names for the selected table
+    columns <- dbListFields(con, input$table)
+    # Create the selectInput for columns
+    selectInput(ns("column"), "Choose a column to search:", choices = columns)
   })
   
   # Reactive expression to get the selected table data or execute custom SQL
@@ -43,15 +55,16 @@ tables_server <- function(input, output, session, con, tables) {
     req(input$table)
     
     # Get the base query for the selected table
-    query <- paste0("SELECT * FROM ", input$table)
+    query <- paste0("SELECT * FROM ", dbQuoteIdentifier(con, input$table))
     
-    # Add conditions if sample_id or gene_symbol are provided
+    # Build conditions
     conditions <- list()
-    if (input$sample_id != "") {
-      conditions <- c(conditions, paste0("sample_id = '", input$sample_id, "'"))
-    }
-    if (input$gene_symbol != "") {
-      conditions <- c(conditions, paste0("gene_symbol = '", input$gene_symbol, "'"))
+    
+    # Add condition for the selected column and search value
+    if (!is.null(input$column) && input$search_value != "") {
+      column_name <- dbQuoteIdentifier(con, input$column)
+      search_value <- dbQuoteString(con, input$search_value)
+      conditions <- c(conditions, paste0(column_name, " = ", search_value))
     }
     
     # Append conditions to the query if any

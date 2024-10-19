@@ -16,11 +16,30 @@ plots_server <- function(input, output, session) {
   amr_data <- eventReactive(input$plot, {
     req(input$table_select)
     
-    # Determine the appropriate columns based on the selected table
-    gene_column <- if (input$table_select == "resFinder_results") "resistance_gene" else "gene"
+    # Determine the appropriate table and gene column based on the selected table
+    if (input$table_select == "resFinder_results") {
+      table_name <- "resFinder_results"
+      gene_column <- "resistance_gene"
+      where_clause <- ""
+    } else if (input$table_select == "amrp_results") {
+      table_name <- "amrp_results"
+      gene_column <- "gene_symbol"
+      where_clause <- ""
+    } else if (input$table_select == "amrcore_results") {
+      table_name <- "amrp_results"  # Use amrp_results table
+      gene_column <- "gene_symbol"
+      where_clause <- "WHERE scope = 'core'"  # Include only rows where scope == 'core'
+    }else if (input$table_select == "_results") {
+      table_name <- "amrp_results"  # Use amrp_results table
+      gene_column <- "gene_symbol"
+      where_clause <- "WHERE scope = 'core'"  # Include only rows where scope == 'core'
+    }else {
+      showNotification("Invalid table selection.", type = "error")
+      return(NULL)
+    }
     
-    # SQL query to select necessary columns
-    query <- paste0("SELECT sample_id, ", gene_column, " FROM ", input$table_select)
+    # SQL query to select necessary columns, including the WHERE clause if applicable
+    query <- paste0("SELECT sample_id, ", gene_column, " FROM ", table_name, " ", where_clause)
     
     # Read data into a data frame
     df <- dbGetQuery(con, query)
@@ -84,45 +103,44 @@ plots_server <- function(input, output, session) {
     print(head(melted_data))
     
     # Merge metadata with melted data using 'Sample' and 'sample_id'
-    melted_data <- merge(melted_data, metadata, by.x = "Sample", by.y = "sample_id", all.x = TRUE)
+    merged_data <- merge(melted_data, metadata, by.x = "Sample", by.y = "sample_id", all.x = TRUE)
     
     # Debugging: Print the first few rows after merging
     print("Merged Data:")
-    print(head(melted_data))
+    print(head(merged_data))
     
     # Check if merged data is empty
-    if (nrow(melted_data) == 0) {
+    if (nrow(merged_data) == 0) {
       showNotification("No data available after merging with metadata.", type = "warning")
       return(NULL)
     }
     
-    melted_data <- melted_data %>%
+    # Arrange data for plotting
+    merged_data <- merged_data %>%
       arrange(source, Sample)  # First by 'source', then by 'Sample' within each 'source'
     
-    
-    
     # Ensure the Sample factor levels are in the sorted order
-    melted_data$Sample <- factor(melted_data$Sample, levels = unique(melted_data$Sample))
+    merged_data$Sample <- factor(merged_data$Sample, levels = unique(merged_data$Sample))
     
     # Create a color palette for the 'source' using RColorBrewer
-    unique_sources <- unique(melted_data$source)
+    unique_sources <- unique(merged_data$source)
     source_colors <- setNames(
       RColorBrewer::brewer.pal(min(8, length(unique_sources)), "Dark2"),
       unique_sources
     )
     
     # Create a color palette for the 'mash_group' using RColorBrewer
-    unique_mash_groups <- unique(melted_data$mash_group)
+    unique_mash_groups <- unique(merged_data$mash_group)
     mash_group_colors <- setNames(
       RColorBrewer::brewer.pal(min(8, length(unique_mash_groups)), "Set3"),
       unique_mash_groups
     )
     
     # Create the static heatmap for AMR counts using ggplot2
-    heatmap <- ggplot(melted_data, aes(x = Sample, y = AMR, fill = as.factor(Count))) +
+    heatmap <- ggplot(merged_data, aes(x = Sample, y = AMR, fill = as.factor(Count))) +
       geom_tile(color = "gray") +
       scale_fill_manual(
-        values = c("0" = "white", "1" = "blue", "2" = "red", "3" = "limegreen", "4" = "black"),
+        values = c("0" = "white", "1" = "dodgerblue", "2" = "red", "3" = "limegreen", "4" = "black"),
         name = "Count"
       ) +
       theme_bw() +
@@ -133,21 +151,21 @@ plots_server <- function(input, output, session) {
         axis.title.x = element_text(size = 12),
         axis.title.y = element_text(size = 12),
         legend.position = "right",
-        legend.text = element_text(size = 14),  # Doubled legend font size
-        legend.title = element_text(size = 16),  # Doubled legend title font size
+        legend.text = element_text(size = 14),  # Adjusted legend font size
+        legend.title = element_text(size = 16),  # Adjusted legend title font size
         plot.margin = margin(5, 5, 10, 10)
       ) +
       labs(x = NULL, y = "Resistance Genes")
     
-    
-    abundance_data <- melted_data %>% 
+    # Create the abundance histogram
+    abundance_data <- merged_data %>% 
       group_by(Sample) %>% 
       summarise(Abundance = sum(Count))
     
-    abundance_data$Sample <- factor(abundance_data$Sample, levels = levels(melted_data$Sample))
+    abundance_data$Sample <- factor(abundance_data$Sample, levels = levels(merged_data$Sample))
     
     histogram <- ggplot(abundance_data, aes(x = Sample, y = Abundance)) +
-      geom_bar(stat = "identity", fill = "turquoise3") +
+      geom_bar(stat = "identity", fill = "orange1") +
       theme_bw() +
       theme(
         axis.text.x = element_blank(),
@@ -159,42 +177,37 @@ plots_server <- function(input, output, session) {
       ) +
       labs(y = "Abundance")
     
-    
-    
-    # Add Mash group and Source color bars
     # Add Mash group and Source color bars with controlled font sizes
-    mash_group_bar <- ggplot(unique(melted_data[, c("Sample", "mash_group")]), aes(x = Sample, y = 1, fill = mash_group)) +
+    mash_group_bar <- ggplot(unique(merged_data[, c("Sample", "mash_group")]), aes(x = Sample, y = 1, fill = mash_group)) +
       geom_tile(height = 0.1) +
       scale_fill_manual(values = mash_group_colors, name = "Mash Group") +
       theme_void() +
       theme(
         legend.position = "bottom",
-        legend.title = element_text(size = 14, face = "bold"),   # Adjust legend title size and style
-        legend.text = element_text(size = 12)                   # Adjust legend text size
+        legend.title = element_text(size = 14, face = "bold"),
+        legend.text = element_text(size = 12)
       )
     
-    source_bar <- ggplot(unique(melted_data[, c("Sample", "source")]), aes(x = Sample, y = 1, fill = source)) +
+    source_bar <- ggplot(unique(merged_data[, c("Sample", "source")]), aes(x = Sample, y = 1, fill = source)) +
       geom_tile(height = 0.1) +
       scale_fill_manual(values = source_colors, name = "Source") +
       theme_void() +
       theme(
         legend.position = "bottom",
-        legend.title = element_text(size = 14, face = "bold"),   # Adjust legend title size and style
-        legend.text = element_text(size = 12)                   # Adjust legend text size
+        legend.title = element_text(size = 14, face = "bold"),
+        legend.text = element_text(size = 12)
       )
-    
-    
     
     # Determine heights based on context (display vs download)
     if (for_download) {
       heatmap_height <- 40
     } else {
-      heatmap_height <- 60  # Double the height for display; adjust as needed
+      heatmap_height <- 60  # Adjust as needed for display
     }
     
     # Combine the heatmap and color bars using patchwork
     combined_plot <- (histogram / heatmap / mash_group_bar / source_bar) +
-      plot_layout(heights = c(5, heatmap_height, 2, 2), guides = "collect") &  # Adjusted heatmap height
+      plot_layout(heights = c(5, heatmap_height, 2, 2), guides = "collect") &
       theme(
         plot.margin = margin(t = 1, b = 1, l = 10, r = 10),
         legend.position = "bottom"
@@ -209,10 +222,9 @@ plots_server <- function(input, output, session) {
     if (is.null(combined_plot)) return(NULL)
     print(combined_plot)
   }, height = function() {
-    # Set the height to 1.5 times the default height
-    750  # Assuming the default height was 500, 500 * 1.5 = 750
+    # Set the height to a suitable value
+    750  # Adjust as needed
   })
-  
   
   # Download handler for the static plot
   output$download_plot <- downloadHandler(
@@ -227,8 +239,7 @@ plots_server <- function(input, output, session) {
       }
       
       # Save the combined plot to the specified file with standard height
-      ggsave(file, plot = combined_plot, width = 15, height = 10, dpi = 300)  # Standard height for download
+      ggsave(file, plot = combined_plot, width = 15, height = 10, dpi = 300)
     }
   )
 }
-

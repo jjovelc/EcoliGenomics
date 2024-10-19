@@ -6,7 +6,7 @@ def create_prediction_table(conn):
     c = conn.cursor()
     c.execute(
         """
-        CREATE TABLE IF NOT EXISTS plasmid_finder_results (
+        CREATE TABLE IF NOT EXISTS rfplasmid_results (
             sample_id TEXT,
             prediction TEXT,
             votes_chromosomal REAL,
@@ -23,7 +23,7 @@ def insert_prediction_data(db_name, prediction_data):
     c = conn.cursor()
 
     sql_insert = """
-        INSERT OR IGNORE INTO plasmid_finder_results (sample_id, prediction, votes_chromosomal, votes_plasmid, contigID) 
+        INSERT OR IGNORE INTO rfplasmid_results (sample_id, prediction, votes_chromosomal, votes_plasmid, contigID) 
         VALUES (?, ?, ?, ?, ?)
     """
 

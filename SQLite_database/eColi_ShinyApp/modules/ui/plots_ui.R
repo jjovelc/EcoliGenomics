@@ -9,7 +9,8 @@ plots_ui <- function(id) {
   fluidPage(
     sidebarLayout(
       sidebarPanel(
-        selectInput(ns("table_select"), "Select Table:", choices = c("resFinder_results", "another_table")),
+        selectInput(ns("table_select"), "Select Table:", choices = c("resFinder_results", "amrp_results", 
+                                                                     "amrcore_results", "")),
         actionButton(ns("plot"), "Generate Plot"),
         downloadButton(ns("download_plot"), "Download Plot")  # Namespaced download button
       ),
