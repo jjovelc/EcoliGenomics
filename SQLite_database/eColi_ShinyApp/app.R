@@ -14,4 +14,4 @@ source("ui.R")
 source("server.R")
 
 # Run the application
-shinyApp(ui = ui, server = server, options = list(width = 1600, height = 1200))
+shinyApp(ui = ui, server = server)

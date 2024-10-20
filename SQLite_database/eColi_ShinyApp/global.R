@@ -7,6 +7,13 @@ library(tidyverse)
 library(shinydashboard)
 library(shinythemes)
 library(ggiraph)
+library(ggplot2)
+library(reshape2)
+library(RColorBrewer)
+library(patchwork)
+library(htmlwidgets)
+
+
 
 options(shiny.maxRequestSize = 5000*1024^2)
 
@@ -15,3 +22,4 @@ con <- dbConnect(RSQLite::SQLite(), "/Users/juanjovel/OneDrive/jj/UofC/git_repos
 
 # Get list of tables in the database
 tables <- dbListTables(con)
+

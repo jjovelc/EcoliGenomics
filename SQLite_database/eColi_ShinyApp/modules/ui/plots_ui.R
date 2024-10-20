@@ -1,26 +1,24 @@
 # modules/ui/plots_ui.R
-
 source("global.R")
-library(shiny)
 
 plots_ui <- function(id) {
   ns <- NS(id)
-  
   fluidPage(
+    titlePanel("Feature Tilemap"),
     sidebarLayout(
       sidebarPanel(
-        selectInput(ns("table_select"), "Select Table:", choices = c("resFinder_results", "amrp_results", 
-                                                                     "amrcore_results", "")),
+        selectInput(ns("table_select"), "Select Table:", choices = c("resFinder_results", "amrp_results", "amrcore_results")),
         actionButton(ns("plot"), "Generate Plot"),
-        downloadButton(ns("download_plot"), "Download Plot")  # Namespaced download button
+        downloadButton(ns("download_plot"), "Download Plot")
       ),
       mainPanel(
-        # Scrollable container for the plot
         div(
-          style = "overflow: auto; width: 100%; height: 800px; border: 1px solid #ccc; padding: 10px;",
-          plotOutput(ns("amr_heatmap"), height = "1600px", width = "1600px")  # Namespaced plotOutput with larger dimensions
+          #style = "position: relative; overflow: visible;",
+          div(
+            style = "width: 100%; height: 600px; overflow-x: scroll; overflow-y: visible",
+            girafeOutput(ns("amr_tilemap"), width = "1000px", height = "800px")  # Increase height if needed
+          )
         )
-        # Removed the duplicate downloadButton from mainPanel
       )
     )
   )

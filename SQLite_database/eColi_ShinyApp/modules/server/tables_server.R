@@ -5,6 +5,11 @@ source("global.R")
 tables_server <- function(input, output, session, con, tables) {
   ns <- session$ns  # Namespacing for module inputs and outputs
   
+  output$someTable <- renderTable({
+    browser()  # Pause here to inspect variables
+    as.character(some_table_data)  # Ensure the output is a character vector if needed
+  })
+  
   # Update the choices for the table selectInput
   observe({
     updateSelectInput(session, "table", choices = tables)
@@ -32,14 +37,12 @@ tables_server <- function(input, output, session, con, tables) {
         # Return list of tables
         tables <- dbListTables(con)
         return(data.frame(Tables = tables))
-        
       } else if (grepl("^\\.schema (\\w+)$", custom_query, perl = TRUE)) {
         # Extract the table name
         table_name <- sub("^\\.schema (\\w+)$", "\\1", custom_query)
         # Get table schema
         query <- paste0("PRAGMA table_info(", table_name, ");")
         return(dbGetQuery(con, query))
-        
       } else {
         # Execute standard SQL queries
         tryCatch({
