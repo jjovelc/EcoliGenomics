@@ -76,8 +76,36 @@ plots_server <- function(input, output, session) {
     return(metadata)
   })
   
+  # Define a reactive function to hold data deployed in plot
+  
+  merged_data <- reactive({
+    pivot_df <- amr_data()
+    if (is.null(pivot_df)) return(NULL)
+    
+    metadata <- sample_metadata()
+    
+    # Melt the pivot table for ggplot
+    melted_data <- reshape2::melt(pivot_df, id.vars = 'gene')
+    colnames(melted_data) <- c('AMR', 'Sample', 'Count')
+    
+    # Merge metadata with melted data using 'Sample' and 'sample_id'
+    merged_data <- merge(melted_data, metadata, by.x = "Sample", by.y = "sample_id", all.x = TRUE)
+    
+    # Arrange data for plotting
+    merged_data <- merged_data %>%
+      arrange(source, Sample)
+    
+    return(merged_data)
+  })
+  
   # Function to generate the combined plot with adjustable heights
   generate_combined_plot <- function(for_download = FALSE) {
+    merged_data <- merged_data()
+    if (is.null(merged_data) || nrow(merged_data) == 0) {
+      showNotification("No data available after merging with metadata.", type = "warning")
+      return(NULL)
+    }
+    
     pivot_df <- amr_data()
     if (is.null(pivot_df)) return(NULL)
     
@@ -228,4 +256,19 @@ plots_server <- function(input, output, session) {
       ggsave(file, plot = combined_plot, width = 15, height = 10, dpi = 300)
     }
   )
+  
+  output$download_data <- downloadHandler(
+    filename = function() {
+      paste("amr_data_", Sys.Date(), ".csv", sep = "")
+    },
+    content = function(file) {
+      data_to_download <- merged_data()
+      if (is.null(data_to_download) || nrow(data_to_download) == 0) {
+        showNotification("No data available to download.", type = "error")
+        return(NULL)
+      }
+      write.csv(data_to_download, file, row.names = FALSE)
+    }
+  )
+  
 }
