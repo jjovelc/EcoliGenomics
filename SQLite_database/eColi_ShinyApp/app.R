@@ -1,5 +1,8 @@
 # app.R
 
+## Is desired (perhaps is convenient)
+#  merge this script with main UI and server
+
 # Source global files
 source("global.R")
 
