@@ -5,7 +5,8 @@ bgviewer_ui <- function(id) {
   fluidPage(
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
-      tags$script(src = "custom.js")
+      tags$script(src = "https://d3js.org/d3.v6.min.js"),  # Ensure correct D3.js version
+      tags$script(src = "basic_gbmap.js")
     ),
     titlePanel("BGviewer"),
     sidebarLayout(

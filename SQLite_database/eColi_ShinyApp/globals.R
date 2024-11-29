@@ -14,10 +14,9 @@ library(patchwork)
 library(htmlwidgets)
 library(rtracklayer)
 library(jsonlite)
+library(Biostrings)
 
 options(shiny.maxRequestSize = 5000*1024^2)
-
-source("utils/genome_processing.R")
 
 # Connect to your SQLite database
 con <- dbConnect(RSQLite::SQLite(), "/Users/juanjovel/OneDrive/jj/UofC/git_repos/EcoliGenomics/SQLite_database/scripts/Ecoli.db")

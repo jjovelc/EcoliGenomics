@@ -1,26 +1,36 @@
 # modules/bgviewer.R
 
+
 bgviewer_server <- function(input, output, session) {
   observeEvent(input$generate_map, {
+    print("Generate Map button clicked.")  # Debug
     
-    print("Generate Map button clicked.") 
-  
-    print("File upload triggered")  # Debug
-    req(input$genome_file, input$gff_file)  # Ensure both files are uploaded
+    # Ensure files are uploaded
+    req(input$genome_file, input$gff_file)
     
     # File paths
     genome_file <- input$genome_file$datapath
     gff_file    <- input$gff_file$datapath
     
-    print(paste("Uploaded genome file:", genome_file))  # Debug
-    print(paste("Uploaded GFF file:", gff_file))  # Debug
+    # Read genome from the FASTA file
+    genome <- readDNAStringSet(genome_file)
+    
+    # Get total genome length
+    genome_length <- sum(width(genome))
+    
+    # Extract the basename of the genome file
+    print(paste0("Name of genome file: ", input$genome_file$name))
+    genome_basename <- tools::file_path_sans_ext(basename(input$genome_file$name))
+    
+    print(paste("Uploaded genome file:", genome_file))
+    print(paste("Uploaded GFF file:", gff_file))
+    print(paste("Genome basename:", genome_basename))
     
     # Parse the GFF file
     gff_data <- import(gff_file)  # GRanges object
     
     # Filter for CDS features
     cds_data <- gff_data[gff_data$type == "CDS"]
-    print(paste("Number of CDS features:", length(cds_data)))  # Debug
     
     # Extract relevant information
     genes <- data.frame(
@@ -35,9 +45,19 @@ bgviewer_server <- function(input, output, session) {
     print("Extracted gene data:")  # Debug
     print(head(genes))
     
-    # Convert to JSON and send to frontend
-    genes_json <- toJSON(genes)
+    # Convert to JSON string
+    genes_json <- toJSON(genes, auto_unbox = TRUE)  # Ensure proper JSON string
+    
     print("Sending JSON data to the frontend:")  # Debug
-    session$sendCustomMessage("updateGenomeMap", genes_json)
+    
+    # Prepare data to send to the frontend
+    message <- list(
+      genes = genes_json,
+      genomeLength = genome_length,
+      filename = genome_basename
+    )
+    
+    # Send JSON to JavaScript
+    session$sendCustomMessage("updateGenomeMap", message)
   })
 }

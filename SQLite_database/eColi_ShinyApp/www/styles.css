@@ -14,7 +14,7 @@
 
 .tooltip {
   position: absolute;
-  background-color: white;
+  background-color: "#EEEEEE";
   border: 1px solid black;
   padding: 5px;
   display: none;
@@ -26,6 +26,7 @@
   width: 100%; /* Full width of the parent container */
   height: 90vh; /* 80% of the browser viewport height */
   overflow: auto; /* Allow scrolling for any overflow */
+  background-color: ;
   border: 1px solid #ddd; /* Optional: Add a border for debugging */
 }
 
