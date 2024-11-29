@@ -57,7 +57,7 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
       .attr("x", 0)
       .attr("y", 0)
       .attr("text-anchor", "middle")
-      .attr("font-size", "20px")
+      .attr("font-size", "24px")
       .attr("font-weight", "bold")
       .attr("fill", "black")
       .text(filename);
@@ -70,7 +70,7 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
       .domain([0, genomeLength])
       .range([0, 2 * Math.PI]);
 
-    let colors = { plus: "red", minus: "blue" }; // Strand colors
+    let colors = { plus: "#ff0000", minus: "#0000ff" }; // Strand colors
 
     genes.forEach((gene) => {
       const startAngle = angleScale(gene.start);
@@ -106,7 +106,7 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
     legend.append("text")
       .attr("x", 30)
       .attr("y", 15)
-      .attr("font-size", "12px")
+      .attr("font-size", "18px")
       .attr("fill", "black")
       .text("Plus strand (+)");
 
@@ -140,7 +140,7 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
     legend.append("text")
       .attr("x", 30)
       .attr("y", 85)
-      .attr("font-size", "12px")
+      .attr("font-size", "18px")
       .attr("fill", "black")
       .text("Minus strand (-)");
 
@@ -162,8 +162,99 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
         .filter((_, i) => genes[i].strand === "-")
         .attr("fill", newColor);
     });
-
     console.log("Legend with color pickers added and updated.");
+
+    // Add a download button for SVG
+    d3.select("#genome-map").append("button")
+      .attr("id", "download-svg")
+      .style("position", "absolute")
+      .style("top", "10px")
+      .style("right", "150px")
+      .text("Download SVG")
+      .on("click", function () {
+        const svgElement = document.getElementById("genome-svg");
+        const serializer = new XMLSerializer();
+        const svgString = serializer.serializeToString(svgElement);
+        const blob = new Blob([svgString], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${filename || "genome_map"}.svg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        console.log("SVG downloaded.");
+      });
+      
+    
+    // Add a download button for PNG
+    // Add a download button for PNG
+d3.select("#genome-map").append("button")
+  .attr("id", "download-png")
+  .style("position", "absolute")
+  .style("top", "10px")
+  .style("right", "20px")
+  .text("Download PNG")
+  .on("click", function exportToPNG() {
+    const svg = document.getElementById("genome-svg");
+
+    // Create a canvas
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    // Match canvas size to SVG size
+    const bbox = svg.getBoundingClientRect();
+    canvas.width = bbox.width;
+    canvas.height = bbox.height;
+
+    // Add a white background
+    context.fillStyle = "white";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Extract SVG string and embed font styles
+    let svgString = new XMLSerializer().serializeToString(svg);
+
+    // Add font styles explicitly, including font size
+    svgString = svgString.replace(
+      "<svg",
+      `<svg xmlns="http://www.w3.org/2000/svg">
+       <style>
+         text {
+           font-family: Arial, sans-serif;
+           font-size: 20px; /* Match the font size used in the visualization */
+           
+         }
+       </style>`
+    );
+
+    const img = new Image();
+    img.onload = function () {
+      // Draw the SVG onto the canvas
+      context.drawImage(img, 0, 0);
+
+      // Export the canvas to a PNG data URL
+      const pngDataUrl = canvas.toDataURL("image/png");
+
+      // Trigger a download
+      const link = document.createElement("a");
+      link.href = pngDataUrl;
+      link.download = `${filename || "genome_map"}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      console.log("PNG downloaded.");
+    };
+
+    // Handle CORS issues by encoding the SVG
+    img.crossOrigin = "anonymous";
+    img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgString)));
+  });
+    
+    
+    
   } catch (error) {
     console.error("Error in visualization logic:", error);
   }
