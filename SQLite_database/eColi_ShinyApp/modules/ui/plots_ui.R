@@ -1,5 +1,4 @@
 # modules/ui/plots_ui.R
-source("global.R")
 
 plots_ui <- function(id) {
   ns <- NS(id)

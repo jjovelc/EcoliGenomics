@@ -1,4 +1,4 @@
-source("global.R")
+source("globals.R")
 
 plots_server <- function(input, output, session) {
   # Load database connection from global environment

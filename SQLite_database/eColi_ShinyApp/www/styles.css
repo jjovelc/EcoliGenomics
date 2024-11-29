@@ -12,3 +12,20 @@
   right: 0;
 }
 
+.tooltip {
+  position: absolute;
+  background-color: white;
+  border: 1px solid black;
+  padding: 5px;
+  display: none;
+  pointer-events: none;
+  font-size: 12px;
+}
+
+#genome-map {
+  width: 100%; /* Full width of the parent container */
+  height: 90vh; /* 80% of the browser viewport height */
+  overflow: auto; /* Allow scrolling for any overflow */
+  border: 1px solid #ddd; /* Optional: Add a border for debugging */
+}
+

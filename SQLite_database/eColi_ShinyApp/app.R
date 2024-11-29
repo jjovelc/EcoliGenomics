@@ -4,11 +4,12 @@
 #  merge this script with main UI and server
 
 # Source global files
-source("global.R")
+source("globals.R")
 
 # Source UI modules
 source("modules/ui/tables_ui.R")
 source("modules/ui/plots_ui.R")
+source("modules/ui/bgviewer_ui.R")
 source("modules/ui/analysis_ui.R")
 source("modules/ui/home_ui.R") 
 

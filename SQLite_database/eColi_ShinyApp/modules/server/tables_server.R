@@ -1,6 +1,6 @@
 # tables_server.R
 
-source("global.R")
+
 
 tables_server <- function(input, output, session, con, tables) {
   ns <- session$ns  # Namespacing for module inputs and outputs

@@ -3,6 +3,7 @@
 # Source server modules
 source("modules/server/tables_server.R")
 source("modules/server/plots_server.R")
+source("modules/server/bgviewer_server.R")
 source("modules/server/analysis_server.R")
 
 server <- function(input, output, session) {
@@ -20,6 +21,8 @@ server <- function(input, output, session) {
   # Call module server functions
   callModule(plots_server, "plots")
   callModule(tables_server, "tables", con = con, tables = tables)
+  callModule(bgviewer_server, "bgviewer")
   callModule(analysis_server, "analysis")
+  
 }
 
