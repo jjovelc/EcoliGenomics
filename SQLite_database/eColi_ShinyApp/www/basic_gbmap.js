@@ -180,94 +180,83 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
     }
   });
 
-  // Add a download button for SVG
-  d3.select("#genome-map").append("button")
-    .attr("id", "download-svg")
-    .style("position", "absolute")
-    .style("top", "10px")
-    .style("right", "150px")
-    .text("Download SVG")
-    .on("click", function () {
-      const svgElement = document.getElementById("genome-svg");
-      const serializer = new XMLSerializer();
-      const svgString = serializer.serializeToString(svgElement);
-      const blob = new Blob([svgString], { type: "image/svg+xml" });
-      const url = URL.createObjectURL(blob);
+     // Prepare download functions
+     // This still need fixing, downloaded 
+     // figures do not come out with Arial font
+    function prepareForDownload() {
+      // Synchronize colors for download
+      plusRect.attr("fill", colors.plus);
+      minusRect.attr("fill", colors.minus);
+      
+      // Ensure text styles are consistent
+      filenameText
+        .attr("font-size", "24px")
+        .attr("font-weight", "bold")
+        .attr("font-family", "Arial, sans-serif");
+      
+      plusLegendText
+        .attr("font-size", "18px")
+        .attr("font-family", "Arial, sans-serif");
+      
+      minusLegendText
+        .attr("font-size", "18px")
+        .attr("font-family", "Arial, sans-serif");
+    }
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `${filename || "genome_map"}.svg`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    // Download SVG button
+    d3.select("#genome-map").append("button")
+      .attr("id", "download-svg")
+      .text("Download SVG")
+      .on("click", function () {
+      prepareForDownload();
 
-      console.log("SVG downloaded.");
-    });
-    
-  
-  // Add a download button for PNG
+        const svgElement = document.getElementById("genome-svg");
+        const serializer = new XMLSerializer();
+        const svgString = serializer.serializeToString(svgElement);
+        const blob = new Blob([svgString], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
 
-  d3.select("#genome-map").append("button")
-    .attr("id", "download-png")
-    .style("position", "absolute")
-    .style("top", "10px")
-    .style("right", "20px")
-    .text("Download PNG")
-    .on("click", function exportToPNG() {
-      const svg = document.getElementById("genome-svg");
-  
-      // Create a canvas
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-  
-      // Match canvas size to SVG size
-      const bbox = svg.getBoundingClientRect();
-      canvas.width = bbox.width;
-      canvas.height = bbox.height;
-  
-      // Add a white background
-      context.fillStyle = "white";
-      context.fillRect(0, 0, canvas.width, canvas.height);
-  
-      // Extract SVG string and embed font styles
-      let svgString = new XMLSerializer().serializeToString(svg);
-  
-      // Add font styles explicitly, including font size
-      svgString = svgString.replace(
-        "<svg",
-        `<svg xmlns="http://www.w3.org/2000/svg">
-         <style>
-           text {
-             font-family: Arial, sans-serif;
-             font-size: 20px; /* Match the font size used in the visualization */
-           }
-         </style>`
-      );
-  
-      const img = new Image();
-      img.onload = function () {
-        // Draw the SVG onto the canvas
-        context.drawImage(img, 0, 0);
-  
-        // Export the canvas to a PNG data URL
-        const pngDataUrl = canvas.toDataURL("image/png");
-  
-        // Trigger a download
         const link = document.createElement("a");
-        link.href = pngDataUrl;
-        link.download = `${filename || "genome_map"}.png`;
+        link.href = url;
+        link.download = `${filename || "genome_map"}.svg`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-  
-        console.log("PNG downloaded.");
-      };
-  
-      // Handle CORS issues by encoding the SVG
-      img.crossOrigin = "anonymous";
-      img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgString)));
-    });
-  
-    
-    
-  
+      });
+
+    // Download PNG button
+    d3.select("#genome-map").append("button")
+      .attr("id", "download-png")
+      .text("Download PNG")
+      .on("click", function () {
+      prepareForDownload();
+
+        const svg = document.getElementById("genome-svg");
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        const bbox = svg.getBoundingClientRect();
+        canvas.width = bbox.width;
+        canvas.height = bbox.height;
+
+        context.fillStyle = "white";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        const svgString = new XMLSerializer().serializeToString(svg);
+        const img = new Image();
+        img.onload = function () {
+          context.drawImage(img, 0, 0);
+          const pngDataUrl = canvas.toDataURL("image/png");
+          const link = document.createElement("a");
+          link.href = pngDataUrl;
+          link.download = `${filename || "genome_map"}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        };
+        img.src = "data:image/svg+xml;base64," + btoa(svgString);
+      });
+
+  } catch (error) {
+    console.error("Error in visualization logic:", error);
+  }
+});
