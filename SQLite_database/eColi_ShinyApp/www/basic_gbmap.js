@@ -164,6 +164,8 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
     });
 
      // Prepare download functions
+     // This still need fixing, downloaded 
+     // figures do not come out with Arial font
     function prepareForDownload() {
       // Synchronize colors for download
       plusRect.attr("fill", colors.plus);
@@ -189,7 +191,7 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
       .attr("id", "download-svg")
       .text("Download SVG")
       .on("click", function () {
-        prepareForDownload();
+      prepareForDownload();
 
         const svgElement = document.getElementById("genome-svg");
         const serializer = new XMLSerializer();
@@ -210,7 +212,7 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
       .attr("id", "download-png")
       .text("Download PNG")
       .on("click", function () {
-        prepareForDownload();
+      prepareForDownload();
 
         const svg = document.getElementById("genome-svg");
         const canvas = document.createElement("canvas");
