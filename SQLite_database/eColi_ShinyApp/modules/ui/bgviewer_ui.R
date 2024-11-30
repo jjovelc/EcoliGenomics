@@ -5,7 +5,10 @@ bgviewer_ui <- function(id) {
   fluidPage(
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
-      tags$script(src = "https://d3js.org/d3.v6.min.js"),  # Ensure correct D3.js version
+      tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"),
+      tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/canvas2image/1.0.1/canvas2image.min.js"),
+      tags$script(src = "https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"),
+      tags$script(src = "https://d3js.org/d3.v6.min.js"),
       tags$script(src = "basic_gbmap.js")
     ),
     titlePanel("BGviewer"),
