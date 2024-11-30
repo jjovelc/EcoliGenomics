@@ -163,21 +163,31 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
         .attr("fill", newColor);
     });
 
-    // Function to synchronize colors
+     // Prepare download functions
     function prepareForDownload() {
+      // Synchronize colors for download
       plusRect.attr("fill", colors.plus);
       minusRect.attr("fill", colors.minus);
+      
+      // Ensure text styles are consistent
+      filenameText
+        .attr("font-size", "24px")
+        .attr("font-weight", "bold")
+        .attr("font-family", "Arial, sans-serif");
+      
+      plusLegendText
+        .attr("font-size", "18px")
+        .attr("font-family", "Arial, sans-serif");
+      
+      minusLegendText
+        .attr("font-size", "18px")
+        .attr("font-family", "Arial, sans-serif");
     }
 
     // Download SVG button
-    // Download SVG button
-
     d3.select("#genome-map").append("button")
       .attr("id", "download-svg")
       .text("Download SVG")
-      .style("position", "absolute")
-      .style("top", "10px")
-      .style("right", "150px")
       .on("click", function () {
         prepareForDownload();
 
@@ -195,12 +205,9 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
         document.body.removeChild(link);
       });
 
-    
+    // Download PNG button
     d3.select("#genome-map").append("button")
       .attr("id", "download-png")
-      .style("position", "absolute")
-      .style("top", "10px")
-      .style("right", "20px")
       .text("Download PNG")
       .on("click", function () {
         prepareForDownload();
