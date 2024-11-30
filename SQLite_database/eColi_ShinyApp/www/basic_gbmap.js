@@ -163,7 +163,73 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
         .attr("fill", newColor);
     });
 
-    console.log("Legend with color pickers added and updated.");
+    // Function to synchronize colors
+    function prepareForDownload() {
+      plusRect.attr("fill", colors.plus);
+      minusRect.attr("fill", colors.minus);
+    }
+
+    // Download SVG button
+    // Download SVG button
+
+    d3.select("#genome-map").append("button")
+      .attr("id", "download-svg")
+      .text("Download SVG")
+      .style("position", "absolute")
+      .style("top", "10px")
+      .style("right", "150px")
+      .on("click", function () {
+        prepareForDownload();
+
+        const svgElement = document.getElementById("genome-svg");
+        const serializer = new XMLSerializer();
+        const svgString = serializer.serializeToString(svgElement);
+        const blob = new Blob([svgString], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${filename || "genome_map"}.svg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+
+    
+    d3.select("#genome-map").append("button")
+      .attr("id", "download-png")
+      .style("position", "absolute")
+      .style("top", "10px")
+      .style("right", "20px")
+      .text("Download PNG")
+      .on("click", function () {
+        prepareForDownload();
+
+        const svg = document.getElementById("genome-svg");
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        const bbox = svg.getBoundingClientRect();
+        canvas.width = bbox.width;
+        canvas.height = bbox.height;
+
+        context.fillStyle = "white";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        const svgString = new XMLSerializer().serializeToString(svg);
+        const img = new Image();
+        img.onload = function () {
+          context.drawImage(img, 0, 0);
+          const pngDataUrl = canvas.toDataURL("image/png");
+          const link = document.createElement("a");
+          link.href = pngDataUrl;
+          link.download = `${filename || "genome_map"}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        };
+        img.src = "data:image/svg+xml;base64," + btoa(svgString);
+      });
+
   } catch (error) {
     console.error("Error in visualization logic:", error);
   }
