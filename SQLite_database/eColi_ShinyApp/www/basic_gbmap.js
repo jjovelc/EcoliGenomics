@@ -167,7 +167,7 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
       .attr("width", 120)
       .attr("height", 40)
       .append("xhtml:div")
-      .html(`<input type="color" id="plus-color-picker" value="${colors.plus}" style="border: none;" />`);
+      .html(`<input type="color" id="plus-color-picker" value="#FFFFFF" style="border: none;" />`);
     
     // Minus strand legend
     const minusRect = legend.append("rect")
@@ -192,7 +192,7 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
       .attr("width", 120)
       .attr("height", 40)
       .append("xhtml:div")
-      .html(`<input type="color" id="minus-color-picker" value="${colors.minus}" style="border: none;" />`);
+      .html(`<input type="color" id="minus-color-picker" value="#FFFFFF" style="border: none;" />`);
     
     // Color picker event listeners
     document.getElementById("plus-color-picker").addEventListener("input", function () {
