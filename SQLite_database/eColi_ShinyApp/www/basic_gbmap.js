@@ -1,7 +1,7 @@
 console.log("basic_gbmap.js loaded successfully.");
 console.log("Loaded D3.js version:", d3.version);
 
-Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {  
+Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
   console.log("Shiny.addCustomMessageHandler triggered");
   console.log("Data received from R:", data);
 
@@ -81,7 +81,7 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
       .domain([0, genomeLength])
       .range([0, 2 * Math.PI]);
 
-    let colors = { plus: "red", minus: "blue" }; // Strand colors
+    let colors = { plus: "#FF0000", minus: "#0000FF" }; // Strand colors
 
     genes.forEach((gene) => {
       const startAngle = angleScale(gene.start);
@@ -174,41 +174,19 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
         .attr("fill", newColor);
     });
     
-      console.log("Legend with color pickers added and updated.");
-    } catch (error) {
-      console.error("Error in visualization logic:", error);
-    }
-  });
-
-     // Prepare download functions
-     // This still need fixing, downloaded 
-     // figures do not come out with Arial font
+    // Prepare download functionality
     function prepareForDownload() {
-      // Synchronize colors for download
-      plusRect.attr("fill", colors.plus);
-      minusRect.attr("fill", colors.minus);
-      
-      // Ensure text styles are consistent
-      filenameText
-        .attr("font-size", "24px")
-        .attr("font-weight", "bold")
-        .attr("font-family", "Arial, sans-serif");
-      
-      plusLegendText
-        .attr("font-size", "18px")
-        .attr("font-family", "Arial, sans-serif");
-      
-      minusLegendText
-        .attr("font-size", "18px")
-        .attr("font-family", "Arial, sans-serif");
+      // Synchronize colors
+      d3.selectAll("path").filter((_, i) => genes[i].strand === "+").attr("fill", colors.plus);
+      d3.selectAll("path").filter((_, i) => genes[i].strand === "-").attr("fill", colors.minus);
     }
 
-    // Download SVG button
+    // Add SVG download button
     d3.select("#genome-map").append("button")
       .attr("id", "download-svg")
       .text("Download SVG")
       .on("click", function () {
-      prepareForDownload();
+        prepareForDownload();
 
         const svgElement = document.getElementById("genome-svg");
         const serializer = new XMLSerializer();
@@ -224,12 +202,12 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
         document.body.removeChild(link);
       });
 
-    // Download PNG button
+    // Add PNG download button
     d3.select("#genome-map").append("button")
       .attr("id", "download-png")
       .text("Download PNG")
       .on("click", function () {
-      prepareForDownload();
+        prepareForDownload();
 
         const svg = document.getElementById("genome-svg");
         const canvas = document.createElement("canvas");
@@ -256,6 +234,7 @@ Shiny.addCustomMessageHandler("updateGenomeMap", function (data) {
         img.src = "data:image/svg+xml;base64," + btoa(svgString);
       });
 
+    console.log("Download buttons added.");
   } catch (error) {
     console.error("Error in visualization logic:", error);
   }
